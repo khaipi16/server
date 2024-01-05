@@ -1,6 +1,6 @@
 import cors from 'cors'
 require('dotenv').config();
-const host_port = process.env.HOST_PORT
+const host_port = process.env.PORT
 
 
 const corsConfig = {

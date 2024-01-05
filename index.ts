@@ -10,7 +10,7 @@ import applyCors from './config/Cors';
 import cors from 'cors';
 require('dotenv').config();
 
-const port = process.env.SERVER_PORT
+const port = process.env.PORT
 const salt = process.env.HASH_SALT
 const secret = process.env.SECRET_KEY;
 const bcrypt = require('bcrypt');
