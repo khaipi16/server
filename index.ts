@@ -4,10 +4,9 @@ import User from './models/User';
 import Blog from './models/Blog';
 import { connectToDB } from './common/Database';
 import { UserInfo } from './models/UserInfo';
-import multer from 'multer';
+// import multer from 'multer';
 import fs from 'fs';
 import applyCors from './config/Cors';
-import cors from 'cors';
 require('dotenv').config();
 
 const port = process.env.SERVER_PORT
@@ -29,6 +28,7 @@ class BlogAPI {
     private setupRoutes() {
         connectToDB();
         this.app.use(applyCors);
+        
         // this.app.use(
         //     cors({
         //       origin: "*",
