@@ -39,8 +39,9 @@ class BlogAPI {
         this.app.post('/register', this.registerUser.bind(this));
         this.app.post('/login', this.loginUser.bind(this));
         this.app.post('/logout', this.logoutUser.bind(this));
-
         this.app.post('/write', upload.single('file'), this.writeNewBlog.bind(this));
+
+        this.app.get('/', this.getDefaultPage.bind(this));
         this.app.get('/profile', applyCors, this.getProfile.bind(this));
         this.app.get('/get-blogs', applyCors, this.getBlogs.bind(this));
         this.app.get('/latest-blog', this.getLatestBlog.bind(this));
@@ -55,6 +56,9 @@ class BlogAPI {
         })
     }
 
+    private async getDefaultPage(req: Request, res: Response) {
+        res.json("Server online");
+    }
 
     private async registerUser(req: Request, res: Response) {
         try {
