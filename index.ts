@@ -29,10 +29,10 @@ class BlogAPI {
     private setupRoutes() {
         connectToDB();
         // this.app.use(applyCors);
-        this.app.use(
-            cors({
-              origin: "*",
-          }));
+        // this.app.use(
+        //     cors({
+        //       origin: "*",
+        //   }));
         this.app.use(express.json());
         this.app.use(cookieParser());
         // Bind the method to the class instance
