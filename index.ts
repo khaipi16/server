@@ -28,7 +28,7 @@ class BlogAPI {
 
     private setupRoutes() {
         connectToDB();
-        // this.app.use(applyCors);
+        this.app.use(applyCors);
         // this.app.use(
         //     cors({
         //       origin: "*",
