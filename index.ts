@@ -10,13 +10,13 @@ import applyCors from './config/Cors';
 import cors from 'cors';
 require('dotenv').config();
 
-const port = process.env.PORT
+const port = process.env.SERVER_PORT
 const salt = process.env.HASH_SALT
 const secret = process.env.SECRET_KEY;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
-const upload = multer({dest: 'uploads/'});
+// const upload = multer({dest: 'uploads/'});
 
 class BlogAPI {
     private app: express.Application;
@@ -39,7 +39,7 @@ class BlogAPI {
         this.app.post('/register', this.registerUser.bind(this));
         this.app.post('/login', this.loginUser.bind(this));
         this.app.post('/logout', this.logoutUser.bind(this));
-        this.app.post('/write', upload.single('file'), this.writeNewBlog.bind(this));
+        this.app.post('/write', this.writeNewBlog.bind(this));
 
         this.app.get('/', this.getDefaultPage.bind(this));
         this.app.get('/profile', applyCors, this.getProfile.bind(this));
