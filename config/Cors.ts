@@ -4,8 +4,7 @@ const host_port = process.env.PORT
 
 
 const corsConfig = {
-    // origin: "https://client-khaipi16s-projects.vercel.app" , 
-    origin: "http://localhost:3000", 
+    origin: "https://adayinthelife.vercel.app" , 
     methods: 'POST, GET, PUT, DELETE, HEAD, PATCH, OPTIONS',
     credentials: true,
 };
