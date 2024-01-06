@@ -1,0 +1,12 @@
+{
+    "version": 2,
+    "build": [
+        {"src:": "*.ts", "use": "@vercel/nodde" }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        }
+    ]
+}
