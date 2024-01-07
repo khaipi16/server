@@ -1,10 +1,19 @@
 {
   "version": 2,
   "builds": [
-    { "src": "*.ts", 
-      "use": "@vercel/node" }
+    { "src": "*.ts", "use": "@vercel/node" }
   ],
   "routes": [
+    {
+      "src": "/write",
+      "methods": ["POST"],
+      "headers": {
+        "Access-Control-Allow-Origin": "https://adayinthelife.vercel.app",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Headers": "Content-Type"
+      },
+      "dest": "/"
+    },
     {
       "src": "/(.*)",
       "dest": "/"
