@@ -4,8 +4,6 @@ import User from './models/User';
 import Blog from './models/Blog';
 import { connectToDB } from './common/Database';
 import { UserInfo } from './models/UserInfo';
-// import multer from 'multer';
-import fs from 'fs';
 import applyCors from './config/Cors';
 require('dotenv').config();
 
@@ -15,7 +13,6 @@ const secret = process.env.SECRET_KEY;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
-// const upload = multer({dest: 'uploads/'});
 
 class BlogAPI {
     private app: express.Application;
@@ -28,11 +25,6 @@ class BlogAPI {
     private setupRoutes() {
         connectToDB();
         this.app.use(applyCors);
-        
-        // this.app.use(
-        //     cors({
-        //       origin: "*",
-        //   }));
         this.app.use(express.json());
         this.app.use(cookieParser());
         // Bind the method to the class instance
@@ -42,8 +34,8 @@ class BlogAPI {
         this.app.post('/write', this.writeNewBlog.bind(this));
 
         this.app.get('/', this.getDefaultPage.bind(this));
-        this.app.get('/profile', applyCors, this.getProfile.bind(this));
-        this.app.get('/get-blogs', applyCors, this.getBlogs.bind(this));
+        this.app.get('/profile', this.getProfile.bind(this));
+        this.app.get('/get-blogs', this.getBlogs.bind(this));
         this.app.get('/latest-blog', this.getLatestBlog.bind(this));
         this.app.get('/get-blogs/:id', this.getSpecificBlog.bind(this));
         this.app.use((req, res, next) => {
@@ -150,36 +142,29 @@ class BlogAPI {
     }
 
     private async writeNewBlog(req: Request, res: Response) {
-        let newPath = '';
         try {
-            if(req.file) {
-                const {originalname, path} = req.file;
-                // Split path name into two, and create new path using originalname and file path
-                const splitPath = path.split('/');
-                newPath = splitPath[0] + '/' + originalname;
-                await fs.promises.rename(path, newPath);
-            }
-
-            const {token} = req.cookies
+            const { token } = req.cookies;
             jwt.verify(token, secret, {}, async (err: Error, info: UserInfo) => {
-                if(err) throw err;
-                let {title, author, date, content} = req.body;
-                if (!author) {
-                    author = "Anonoymous";
-                }
-                const blogData = await Blog.create({ title, author, date, content, newPath, user:info.id})
-                return res.json(blogData)
+              if (err) throw err;
+        
+              let { title, author, date, content } = req.body;
+        
+              if (!author) {
+                author = "Anonymous";
+              }
+        
+              const blogData = await Blog.create({ title, author, date, content, user: info.id });
+        
+              return res.json(blogData);
             });
-            
-        }
-        catch (ex) {
+          } catch (ex) {
             console.error('Error posting blog:', ex);
             return res.status(500).json({ message: 'Internal server error' });
-        }
-        /**
-         * Add this line if TS is having issues:
-              npm install express @types/express multer @types/multer
-         */
+          }
+       /**  
+        * Add this line if TS is having issues:
+        * npm install express @types/express multer @types/multer
+        */
     }
 
     private async getBlogs(req: Request, res: Response) {
@@ -221,7 +206,6 @@ class BlogAPI {
       private async deleteBlog(req: Request, res: Response) {
           const remove = await Blog.delete({})
       }
-
 
 
 }
