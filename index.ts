@@ -142,8 +142,6 @@ class BlogAPI {
     }
 
     private async writeNewBlog(req: Request, res: Response) {
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-
         try {
             const { token } = req.cookies;
             jwt.verify(token, secret, {}, async (err: Error, info: UserInfo) => {
