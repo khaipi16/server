@@ -130,9 +130,16 @@ class BlogAPI {
 
     private getProfile(req: Request, res: Response) {
         const {token} = req.cookies
+
+        if (!token) {
+            return res.status(401).json({ message: 'Unauthorized: Token missing' })
+        }
         jwt.verify(token, secret, {}, (err: Error, info: UserInfo) => {
-            if(err) throw err;
-            res.json(info);
+            if(err) {
+                res.json(info);
+                console.error('Error verifying token:', err);
+                return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+            }
         });
         res.json(req.cookies);
     }
