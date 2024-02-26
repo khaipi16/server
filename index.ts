@@ -141,31 +141,61 @@ class BlogAPI {
         res.cookie('token', '').json('ok');
     }
 
+    // private async writeNewBlog(req: Request, res: Response) {
+    //     try {
+    //         const { token } = req.cookies;
+    //         jwt.verify(token, secret, {}, async (err: Error, info: UserInfo) => {
+    //           if (err) throw err;
+        
+    //           let { title, author, date, content } = req.body;
+        
+    //           if (!author) {
+    //             author = "Anonymous";
+    //           }
+        
+    //           const blogData = await Blog.create({ title, author, date, content, user: info.id });
+        
+    //           return res.json(blogData);
+    //         });
+    //       } catch (ex) {
+    //         console.error('Error posting blog:', ex);
+    //         return res.status(500).json({ message: 'Internal server error' });
+    //       }
+    //    /**  
+    //     * Add this line if TS is having issues:
+    //     * npm install express @types/express multer @types/multer
+    //     */
+    // }
+
     private async writeNewBlog(req: Request, res: Response) {
         try {
             const { token } = req.cookies;
-            jwt.verify(token, secret, {}, async (err: Error, info: UserInfo) => {
-              if (err) throw err;
-        
-              let { title, author, date, content } = req.body;
-        
-              if (!author) {
-                author = "Anonymous";
-              }
-        
-              const blogData = await Blog.create({ title, author, date, content, user: info.id });
-        
-              return res.json(blogData);
+            if (!token) {
+                return res.status(401).json({ message: 'Unauthorized: Token missing' });
+            }
+    
+            jwt.verify(token, secret, {}, async (err: Error | null, info?: UserInfo) => {
+                if (err) {
+                    console.error('Error verifying token:', err);
+                    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+                }
+    
+                let { title, author, date, content } = req.body;
+    
+                if (!author) {
+                    author = "Anonymous";
+                }
+    
+                const blogData = await Blog.create({ title, author, date, content, user: info?.id });
+    
+                return res.json(blogData);
             });
-          } catch (ex) {
+        } catch (ex) {
             console.error('Error posting blog:', ex);
             return res.status(500).json({ message: 'Internal server error' });
-          }
-       /**  
-        * Add this line if TS is having issues:
-        * npm install express @types/express multer @types/multer
-        */
+        }
     }
+    
 
     private async getBlogs(req: Request, res: Response) {
         return res.json(await Blog.find()
