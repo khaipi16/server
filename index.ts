@@ -177,6 +177,9 @@ class BlogAPI {
     private async writeNewBlog(req: Request, res: Response) {
         try {
             const { token } = req.cookies;
+            console.log('TOKEN: ', token)
+            console.log('REQ.COOKIES: ', req.cookies)
+
             if (!token) {
                 return res.status(401).json({ message: 'Unauthorized: Token missing' });
             }
