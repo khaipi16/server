@@ -8,11 +8,13 @@ import applyCors from './config/Cors';
 require('dotenv').config();
 
 const port = process.env.SERVER_PORT
-const salt = process.env.HASH_SALT
+// const salt = process.env.HASH_SALT
 const secret = process.env.SECRET_KEY;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
+const salt = bcrypt.genSaltSync(10);
+
 
 class BlogAPI {
     private app: express.Application;
@@ -76,14 +78,17 @@ class BlogAPI {
 
         const pass = bcrypt.compareSync(password, userID.password);
 
+        let tok = ''
         if(pass) {
             // Logged in
             jwt.sign({username, id:userID._id}, secret, {}, (ex: Error | null, token?:string) => {
                 if (ex) throw ex;
                 res.cookie('token', token).json({
                     id: userID._id,
-                    username
+                    username,
+                    token
                 });
+                console.log('LOGIN TOKEN: ', token)
             });
 
         }
@@ -141,6 +146,7 @@ class BlogAPI {
                 return res.status(401).json({ message: 'Unauthorized: Invalid token' });
             }
         });
+        console.log('PROFILE TOKEN: ', token)
         res.json(req.cookies);
     }
 
